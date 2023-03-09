@@ -1,4 +1,6 @@
 import java.util.PriorityQueue;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -6,7 +8,6 @@ public class Heap {
     public int findKthLargest(int[] nums, int k) {
         //Given an integer array nums and an integer k, return the kth largest element in the array.
         PriorityQueue<Integer> minHeap = new PriorityQueue<>();
-        int[] largest = new int[k];
         for(int i = 0; i < k; i++){
             minHeap.add(nums[i]);
         }
@@ -68,6 +69,52 @@ public class Heap {
 
     }
 
+    public int minMeetingRooms(int[][] intervals) {
+        //Given an array of meeting time intervals intervals where intervals[i] = [starti, endi], return the minimum number of conference rooms required.
+        // Check for the base case. If there are no intervals, return 0
+        if (intervals.length == 0) {
+          return 0;
+        }
+    
+        // Min heap
+        PriorityQueue<Integer> allocator =
+            new PriorityQueue<Integer>(
+                intervals.length,
+                new Comparator<Integer>() {
+                  public int compare(Integer a, Integer b) {
+                    return a - b;
+                  }
+                });
+    
+        // Sort the intervals by start time
+        Arrays.sort(
+            intervals,
+            new Comparator<int[]>() {
+              public int compare(final int[] a, final int[] b) {
+                return a[0] - b[0];
+              }
+            });
+    
+        // Add the first meeting
+        allocator.add(intervals[0][1]);
+    
+        // Iterate over remaining intervals
+        for (int i = 1; i < intervals.length; i++) {
+    
+          // If the room due to free up the earliest is free, assign that room to this meeting.
+          if (intervals[i][0] >= allocator.peek()) {
+            allocator.poll();
+          }
+    
+          // If a new room is to be assigned, then also we add to the heap,
+          // If an old room is allocated, then also we have to add to the heap with updated end time.
+          allocator.add(intervals[i][1]);
+        }
+    
+        // The size of the heap tells us the minimum rooms required for all the meetings.
+        return allocator.size();
+      }
+
     public static void main(String[] args) {
         //test findKthLargest
         int[] nums = {3,2,3,1,2,4,5,5,6};
@@ -94,5 +141,10 @@ public class Heap {
         for(int i = 0; i < ret.length; i++){
             System.out.print(ret[i] + " ");
         }
+
+        //test minMeetingRooms
+        int[][] intervals = {{0,30},{5,10},{15,20}};
+        System.out.println("\nMin meeting rooms: " + h.minMeetingRooms(intervals));
+        
     }
 }

@@ -48,6 +48,40 @@ class Solution {
         return dp[nums.length - 1];
     }
     
+
+    public int numIslands(char[][] grid) {
+        //Given an m x n 2D binary grid grid which represents a map of '1's (land) and '0's (water), return the number of islands.
+        //An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically. 
+        //You may assume all four edges of the grid are all surrounded by water.
+        int islands = 0;
+        int rl = grid.length;
+        int cl = grid[0].length;
+
+        for (int i = 0; i < rl; i++) {
+            for (int j = 0; j < cl; j++) {
+                if (grid[i][j] == '1') {
+                    islands++;
+                    dfs(grid, i, j);
+                }
+            }
+        }
+        return islands;
+    }
+
+    public void dfs(char[][] grid, int i, int j) {
+        int rl = grid.length;
+        int cl = grid[0].length;
+
+        if (i < 0 || i >= rl || j < 0 || j >= cl || grid[i][j] == '0') {
+            return;
+        }
+
+        grid[i][j] = '0';
+        dfs(grid, i + 1, j);
+        dfs(grid, i - 1, j);
+        dfs(grid, i, j + 1);
+        dfs(grid, i, j - 1);
+    }
     
     // public static int factorial(int number){
     //     int fact=1;
@@ -60,9 +94,17 @@ class Solution {
 
     public static void main(String[] args) {
         Solution s = new Solution();
-        System.out.println(s.climbStairs(9));
-        System.out.println(s.maxProfit(new int[]{7,1,5,3,6,4}));
-        System.out.println(s.rob(new int[]{1,2,3,1}));
+        System.out.println("climb stares with n = 9" + s.climbStairs(9));
+        System.out.println("max profit for list 7,1,5,3,6,4: " + s.maxProfit(new int[]{7,1,5,3,6,4}));
+        System.out.println("rob with lsit 1,2,3,1: " + s.rob(new int[]{1,2,3,1}));
+        char[][] islands = 
+        {
+            {'1','1','0','0','0'},
+            {'1','1','0','0','0'},
+            {'0','0','1','0','0'},
+            {'0','0','0','1','1'}
+        };
+        System.out.println("num of islands " + s.numIslands(islands));
     }
 }
 
