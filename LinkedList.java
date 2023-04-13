@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 
 public class LinkedList {
     public void deleteNode(ListNode node) {
@@ -39,6 +40,25 @@ public class LinkedList {
         }
         
         return prev;
+    }
+
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        ListNode dummyHead = new ListNode(0);
+        ListNode curr = dummyHead;
+        int carry = 0;
+        while (l1 != null || l2 != null || carry != 0) {
+            int x = (l1 != null) ? l1.val : 0;
+            int y = (l2 != null) ? l2.val : 0;
+            int sum = carry + x + y;
+            carry = sum / 10;
+            curr.next = new ListNode(sum % 10);
+            curr = curr.next;
+            if (l1 != null)
+                l1 = l1.next;
+            if (l2 != null)
+                l2 = l2.next;
+        }
+        return dummyHead.next;
     }
 
     public static void main(String[] args) {
@@ -111,5 +131,41 @@ public class LinkedList {
             System.out.print(temp.val + " ");
             temp = temp.next;
         }
+
+        //test addTwoNumbers
+        ListNode head3 = new ListNode(2);
+        ListNode node10 = new ListNode(4);
+        ListNode node11 = new ListNode(3);
+        head3.next = node10;
+        node10.next = node11;
+
+        ListNode head4 = new ListNode(5);
+        ListNode node12 = new ListNode(6);
+        ListNode node13 = new ListNode(4);
+        head4.next = node12;
+        node12.next = node13;
+
+        System.out.println("\n\nBefore adding two numbers: ");
+        temp = head3;
+        while(temp != null){
+            System.out.print(temp.val + " ");
+            temp = temp.next;
+        }
+        System.out.println("");
+        temp = head4;
+        while(temp != null){
+            System.out.print(temp.val + " ");
+            temp = temp.next;
+        }
+
+        ListNode newHead2 = ll.addTwoNumbers(head3, head4);
+        System.out.println("\nAfter adding two numbers: ");
+        temp = newHead2;
+        while(temp != null){
+            System.out.print(temp.val + " ");
+            temp = temp.next;
+        }
+
+
     }
 }
