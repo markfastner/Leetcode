@@ -2,6 +2,7 @@ class Solution(object):
     nums = [0,0,1,1,1,2,2,3,3,4]
     nums2 = [1,1,2,2,3,3,4,5,5]
     nums3 = [9,9,9]
+   
     def removeDuplicates(self, nums):
         #remove duplicates from sorted array
         """
@@ -9,7 +10,7 @@ class Solution(object):
         :rtype: int
         """
         cur = 0
-        prev = nums[0] - 1;
+        prev = nums[0] - 1
         for i in nums:
             if(i != prev):
                 nums[cur] = i
