@@ -93,6 +93,17 @@ class Solution(object):
         # we're here because all the digits are nines
         return [1] + digits
 
+    def sortedSquares(self, nums):
+        #Given an integer array nums sorted in non-decreasing order, 
+        # return an array of the squares of each number sorted in non-decreasing order.
+        """
+        :type nums: List[int]
+        :rtype: List[int]
+        """
+        for i in range(len(nums)):
+            nums[i] = nums[i] * nums[i]
+        nums.sort()
+        return nums
 
 s = Solution()
 print("original list:")
@@ -110,4 +121,6 @@ print("original list:")
 # print(s.singleNumber(s.nums2))
 print(s.nums3)
 print(s.plusOne(s.nums3))
+nums4 = [-4,-1,0,3,10]
+print("sorted squares", s.sortedSquares(nums4))
     
