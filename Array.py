@@ -92,6 +92,45 @@ class Solution(object):
         # we're here because all the digits are nines
         return [1] + digits
 
+    def makesquare(self, matchsticks):
+        """
+        :type matchsticks: List[int]
+        :rtype: bool
+        """
+        def DFS(side, index):
+            # Base case: If we have assigned all matchsticks, check if all sides have the desired length
+            if index == len(matchsticks):
+                return side[0] == side[1] == side[2] == sidelength
+            
+            # Recursive case: Try assigning the current matchstick to each side
+            for i in range(4):
+                # If adding the matchstick to the current side doesn't exceed the sidelength
+                if side[i] + matchsticks[index] <= sidelength:
+                    side[i] += matchsticks[index]  # Add the matchstick to the side
+                    if DFS(side, index + 1):  # Recur for the next matchstick
+                        return True
+                    side[i] -= matchsticks[index]  # Backtrack by removing the matchstick from the side
+            
+            return False  # If no assignment is possible, return False
+
+        # Calculate the sum of all matchstick lengths
+        total_length = sum(matchsticks)
+        # If the total length is not divisible by 4, it's not possible to form a square
+        if total_length % 4 != 0:
+            return False
+        
+        sidelength = total_length // 4  # Calculate the sidelength
+        
+        matchsticks.sort(reverse=True)  # Sort the matchsticks in non-increasing order
+        
+        # Initialize an array to track the length of each side
+        side = [0] * 4
+        
+        return DFS(side, 0)  # Start the DFS from the first matchstick (index 0)
+
+           
+
+
 
 s = Solution()
 print("original list:")
@@ -107,6 +146,6 @@ print("original list:")
 # print(s.nums2)
 # print("single number:")
 # print(s.singleNumber(s.nums2))
-print(s.nums3)
-print(s.plusOne(s.nums3))
+#print(s.nums3)
+#print(s.plusOne(s.nums3))
     

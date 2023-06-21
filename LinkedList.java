@@ -41,6 +41,41 @@ public class LinkedList {
         return prev;
     }
 
+    public ListNode swapPairs(ListNode head) {
+        //Given a linked list, swap every two adjacent nodes and return its head. 
+        //You must solve the problem without modifying the values in the list's nodes 
+        //(i.e., only nodes themselves may be changed.)
+
+        //strategy: 
+        //start at head while cur is not null
+        //get the next node athat the cur node poitns to and the prev node-store value and its next
+        //set cur.next to the next node .next 
+        //next.next points to cur
+        //if prev exists set prev.next to cur.next
+        //increment cur to be what cur is now pointint to
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        ListNode prev = dummy;
+        while(head != null && head.next != null){
+            ListNode firstNode = head;
+            ListNode secondNode = head.next;
+            
+
+            //perform swap
+            firstNode.next = secondNode.next;
+            secondNode.next = firstNode;
+            prev.next = secondNode;
+
+            //iterate
+            prev = firstNode;
+            head= firstNode.next;
+        }
+        return dummy.next;
+    }
+
+    
+
+
     public static void main(String[] args) {
         //test deleteNode
         ListNode head = new ListNode(4);
@@ -111,5 +146,33 @@ public class LinkedList {
             System.out.print(temp.val + " ");
             temp = temp.next;
         }
-    }
+
+
+
+        //test swap pairs
+        ListNode head3 = new ListNode(1);
+        ListNode node10 = new ListNode(2);
+        ListNode node11 = new ListNode(3);
+        ListNode node12 = new ListNode(4);
+        head3.next = node10;
+        node10.next = node11;
+        node11.next = node12;
+        System.out.println("\n\nBefore swapping pairs: ");
+        temp = head3;
+        while(temp != null){
+            System.out.print(temp.val + " ");
+            temp = temp.next;
+        }
+        System.out.println("");
+        ListNode newHead2 = ll.swapPairs(head3);
+        System.out.println("After swapping pairs: ");
+        temp = newHead2;
+        while(temp != null){
+            System.out.print(temp.val + " ");
+            temp = temp.next;
+        }
+        }
+
+    
+
 }
