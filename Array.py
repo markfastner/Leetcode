@@ -2,6 +2,7 @@ class Solution(object):
     nums = [0,0,1,1,1,2,2,3,3,4]
     nums2 = [1,1,2,2,3,3,4,5,5]
     nums3 = [9,9,9]
+   
     def removeDuplicates(self, nums):
         #remove duplicates from sorted array
         """
@@ -9,7 +10,7 @@ class Solution(object):
         :rtype: int
         """
         cur = 0
-        prev = nums[0] - 1;
+        prev = nums[0] - 1
         for i in nums:
             if(i != prev):
                 nums[cur] = i
@@ -131,6 +132,17 @@ class Solution(object):
            
 
 
+    def sortedSquares(self, nums):
+        #Given an integer array nums sorted in non-decreasing order, 
+        # return an array of the squares of each number sorted in non-decreasing order.
+        """
+        :type nums: List[int]
+        :rtype: List[int]
+        """
+        for i in range(len(nums)):
+            nums[i] = nums[i] * nums[i]
+        nums.sort()
+        return nums
 
 s = Solution()
 print("original list:")
@@ -148,4 +160,8 @@ print("original list:")
 # print(s.singleNumber(s.nums2))
 #print(s.nums3)
 #print(s.plusOne(s.nums3))
+print(s.nums3)
+print(s.plusOne(s.nums3))
+nums4 = [-4,-1,0,3,10]
+print("sorted squares", s.sortedSquares(nums4))
     

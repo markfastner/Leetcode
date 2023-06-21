@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.PriorityQueue;
 
 class Array {
@@ -28,6 +29,19 @@ class Array {
         
         return final_count;
         
+    }
+
+    public static int removeElement(int[] nums, int val) {
+        //Given an integer array nums and an integer val, remove all occurrences of val in nums in-place. 
+        //The order of the elements may be changed. Then return the number of elements in nums which are not equal to val.
+        int i = 0;
+        for (int j = 0; j < nums.length; j++) {
+            if (nums[j] != val) {
+                nums[i] = nums[j];
+                i++;
+            }
+        }
+        return i;
     }
 
     public static void moveToEnd(int index, int[] list){
@@ -149,7 +163,81 @@ class Array {
         
         //return array
         return digits;
-}
+    }
+
+    public static int averageValue(int[] nums) {
+        //Given an integer array nums of positive integers, return the average value of all even integers that are divisible by 3.
+        //loop through array and find all even numbers divisible by 3 and add them to a new array
+        ArrayList<Integer> newnums = new ArrayList<Integer>();
+        //we use arraylist since wedont know the size and can easily add numbers to it
+        for(int i: nums){
+            if(i % 2 == 0 && i % 3 == 0){
+                newnums.add(i);
+            }
+        }
+
+        //now we have all the numbers that satisify the given conditions
+        //finally we need to find the average of the numbers in the array
+        //Note that the average of n elements is the sum of the n elements divided by n and rounded down to the nearest integer.
+        int sum = 0;
+        for(int i: newnums){
+            sum += i;
+        }
+        //make sure we dont divide by 0
+        if(newnums.size() == 0){
+            return 0;
+        }
+        else{
+        return sum / newnums.size();
+        }
+    }
+
+    public static void sortColors(int[] nums) {
+            //Given an array nums with n objects colored red, white, or blue, sort them in-place so that objects of the same color are adjacent, with the colors in the order red, white, and blue.
+            //We will use the integers 0, 1, and 2 to represent the color red, white, and blue, respectively.
+            //You must solve this problem without using the library's sort function.
+
+            //thought process:
+            //we will use a counting sort algorithm
+            //we will count the number of 0s, 1s, and 2s in the array
+            //then we will loop through the array and add the correct number of 0s, 1s, and 2s to the array
+
+            int count0 = 0;
+            int count1 = 0;
+            int count2 = 0;
+
+            for(int cur: nums){
+                if(cur == 0){
+                    count0++;
+                }
+                else if(cur == 1){
+                    count1++;
+                }
+                else{
+                    count2++;
+                }
+            }
+
+            //set array
+            int set = 0;
+            for(int i = 0; i < nums.length; i++){
+                if(i < count0){
+                    set = 0;
+                }
+                if(i >= count0 && i < count0 + count1){
+                    set = 1;
+                }
+                if(i >= count0 + count1){
+                    set = 2;
+                }
+                nums[i] = set;
+            }
+        }
+    
+
+
+
+
 
     public static void main(String[] args) {
 
@@ -204,6 +292,40 @@ class Array {
         int[] nums4plusOne = plusOne(nums4);
         for(int i = 0; i < nums4plusOne.length; i++){
             System.out.print(nums4plusOne[i] + ", ");
+        }
+        System.out.println();
+
+        //test for averageValue
+        int[] nums5 = new int[]{1,2,3,4,5,6,7,8,9,12};
+        System.out.print("\nnums5: ");
+        for(int i = 0; i < nums5.length; i++){
+            System.out.print(nums5[i] + ", ");
+        }
+        System.out.println("\naverageValue: " + averageValue(nums5));
+
+        //test removeelement
+        int[] nums6 = new int[]{3,2,2,3};
+        System.out.print("\nnums6: ");
+        for(int i = 0; i < nums6.length; i++){
+            System.out.print(nums6[i] + ", ");
+        }
+
+        System.out.println("\nremoveElement: " + removeElement(nums6, 3));
+        System.out.print("nums6: ");
+        for(int i = 0; i < nums6.length; i++){
+            System.out.print(nums6[i] + ", ");
+        }
+        
+        //test for sortColors
+        int[] nums7 = new int[]{2,0,2,1,1,0};
+        System.out.print("\n\nnums7: ");
+        for(int i = 0; i < nums7.length; i++){
+            System.out.print(nums7[i] + ", ");
+        }
+        sortColors(nums7);
+        System.out.print("\nsortColors: ");
+        for(int i = 0; i < nums7.length; i++){
+            System.out.print(nums7[i] + ", ");
         }
     }
 }
