@@ -509,7 +509,209 @@ public class LC75 {
         return new String(result);
     }
 
+    public ListNode deleteMiddle(ListNode head) {
+        //You are given the head of a linked list. Delete the middle node, and return the head of the modified linked list.
+        
+        //strategy: 2 poitner approach linked list
+        // iterate through linked list with fast and slow pointer- fast moves 2 slow moves 1
+        //when fast poitner gets to end slow point is at teh node before the one we wnat to delete
+        //delete node and have previous node point to the next one
 
+        if (head.next == null)
+            return null;
+        ListNode slow = head;
+        ListNode fast = head.next.next;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        slow.next = slow.next.next;
+
+        return head;
+    }
+
+
+    public ListNode oddEvenList(ListNode head) {
+        /*
+         * Given the head of a singly linked list, group all the nodes with odd indices together 
+         * followed by the nodes with even indices, and return the reordered list.
+         * You must solve the problem in O(1) extra space complexity and O(n) time complexity.
+         */
+
+         //strategy:
+         //since it needs to be 0(n) memory and we cant allocate aditional memory we need to solve problem with one iteration and withuot addition data structure
+         //to do that lets iterate through and if is odd placement link to next odd(next next) and link weven with next even
+         //eventaully the next next will be null(in which case we need to find if we are on an odd or even n)
+         //if its even  and next next is null point to first even
+         //if its odd and next next is null keep it pointing to null
+         //
+
+         if(head == null) return null;
+
+         ListNode odd = head;
+         ListNode even = head.next;
+         ListNode evenHead = even;
+         while(even != null && even.next != null){
+            odd.next = even.next;
+            odd = odd.next;
+            even.next = odd.next;
+            even = even.next;
+         }
+
+         odd.next = evenHead;
+
+         return head;
+
+    }
+
+    public int pairSum(ListNode head) {
+        /*
+         * In a linked list of size n, where n is even, the ith node (0-indexed) of the linked list is known as the twin of the (n-1-i)th node, if 0 <= i <= (n / 2) - 1.
+
+            For example, if n = 4, then node 0 is the twin of node 3, and node 1 is the twin of node 2. These are the only nodes with twins for n = 4.
+            The twin sum is defined as the sum of a node and its twin.
+
+            Given the head of a linked list with even length, return the maximum twin sum of the linked list.
+         */
+
+         //strategy:use a stack
+         //iterate through the linked list with two poitners(fast moves 2 slow moves 1)
+         //add each value for the slow pointer to stack]
+         //when we get to  past half half way create a new value = stack.pop + next val
+         //find greates parisum
+         if(head == null) return 0;
+         Stack<Integer> values = new Stack<>();
+         int greatestPairSum = 0;
+         ListNode slow = head, fast = head.next;
+
+         while(fast != null){
+            values.add(slow.val);
+            //move fast by 2 slow by 1
+            if(fast.next!=null)
+            {
+                fast = fast.next.next;
+                slow= slow.next;
+            }
+            else{
+                fast = fast.next;
+            }
+         }
+         //slow should be at n/2 -1\
+         int pairsum = 0;
+         while(slow.next!=null){
+            slow = slow.next;
+            pairsum = slow.val + values.pop();
+            if(pairsum > greatestPairSum){
+                greatestPairSum = pairsum;
+            }
+         }
+         return greatestPairSum;
+    }
+
+    public boolean leafSimilar(TreeNode root1, TreeNode root2) {
+        /*
+         * Consider all the leaves of a binary tree, from left to right order, the values of those leaves form a leaf value sequence.
+            Return true if and only if the two given trees with head nodes root1 and root2 are leaf-similar.
+         */
+        //strategy: dfs
+        //create two lists and add the leaf values to each list
+        //compare lists and return
+
+        //note definition of leaf: leaf is node that has no children
+
+        ArrayList<Integer> leafvaluesequence1 = new ArrayList<>();
+        ArrayList<Integer> leafvaluesequence2 = new ArrayList<>();
+
+        //dfs first tree and add leaf values 
+        leafValueSequencedfs(root1, leafvaluesequence1);
+        //dfs second tree and add leaf values 
+        leafValueSequencedfs(root2, leafvaluesequence2);
+
+        return leafvaluesequence1.equals(leafvaluesequence2);
+    }
+
+    //depth first search to add leaves to leafvaluesequewnce
+    public void leafValueSequencedfs(TreeNode node, ArrayList<Integer> leafvalues){
+        if(node == null){
+            return;
+        }
+        if(node.left == null && node.right == null){
+            leafvalues.add(node.val);
+            return;
+        }
+        leafValueSequencedfs(node.left, leafvalues);
+        leafValueSequencedfs(node.right, leafvalues);
+
+
+    }
+
+    private int goodNodesCount = 0;
+    public int goodNodes(TreeNode root) {
+        /*
+         * Given a binary tree root, a node X in the tree is named good if in the path from root to X there are no nodes with a value greater than X.
+           Return the number of good nodes in the binary tree.
+         */
+
+         //strategy: dfs
+        goodnodesdfs(root, Integer.MIN_VALUE);
+        return goodNodesCount;
+    }
+
+    public void goodnodesdfs(TreeNode node, int greatest){
+        if(node.val >= greatest){
+            goodNodesCount++;
+        }
+
+        if(node.left !=null){
+            goodnodesdfs(node.left, Math.max(greatest,node.val));
+        }
+        if(node.right !=null){
+            goodnodesdfs(node.right, Math.max(greatest,node.val));
+        }
+
+    }
+
+    int count = 0;
+    int k;
+    HashMap<Long, Integer> h = new HashMap();
+    
+    public void preorder(TreeNode node, long currSum) {
+        if (node == null)
+            return;
+        
+        // current prefix sum
+        currSum += node.val;
+
+        // here is the sum we're looking for
+        if (currSum == k)
+            count++;
+        
+        // number of times the curr_sum − k has occured already, 
+        // determines the number of times a path with sum k 
+        // has occured upto the current node
+        count += h.getOrDefault(currSum - k, 0);
+        
+        // add the current sum into hashmap
+        // to use it during the child nodes processing
+        h.put(currSum, h.getOrDefault(currSum, 0) + 1);
+
+        // process left subtree
+        preorder(node.left, currSum);
+        // process right subtree
+        preorder(node.right, currSum);
+
+        // remove the current sum from the hashmap
+        // in order not to use it during 
+        // the parallel subtree processing
+        h.put(currSum, h.get(currSum) - 1);
+    }    
+            
+    public int pathSum(TreeNode root, int sum) {
+        k = sum;
+        preorder(root, 0L);
+        return count;
+    }
     public static void main(String[] args) {
 
         LC75 test = new LC75();
@@ -588,9 +790,97 @@ public class LC75 {
         // System.out.println(ret11);
 
         //test method 13: remove stars
-        String s = "abc*de";
-        String ret12 = test.removeStars(s);
-        System.out.println(ret12);
+        // String s = "abc*de";
+        // String ret12 = test.removeStars(s);
+        // System.out.println(ret12);
+
+
+        //test method 14: decode string
+        // String s = "3[a]2[bc]";
+        // String ret13 = test.decodeString(s);
+        // System.out.println(ret13);
+
+        //test method 15: delete middle
+        // ListNode head = new ListNode(1);
+        // head.next = new ListNode(2);
+        // head.next.next = new ListNode(3);
+        // head.next.next.next = new ListNode(4);
+        // head.next.next.next.next = new ListNode(5);
+        // ListNode ret14 = test.deleteMiddle(head);
+        // while(ret14 != null){
+        //     System.out.println(ret14.val);   
+        //     ret14 = ret14.next;
+        // }
+
+        //test method 16: odd even list
+        // ListNode head = new ListNode(1);
+        // head.next = new ListNode(2);
+        // head.next.next = new ListNode(3);
+        // head.next.next.next = new ListNode(4);
+        // head.next.next.next.next = new ListNode(5);
+        // ListNode ret15 = test.oddEvenList(head);
+        // while(ret15 != null){
+        //     System.out.println(ret15.val);   
+        //     ret15 = ret15.next;
+        // }
+
+        //test method 17: pair sum
+
+        // ListNode head = new ListNode(1);
+        // head.next = new ListNode(2);
+        // head.next.next = new ListNode(3);
+        // head.next.next.next = new ListNode(4);
+        // int ret16 = test.pairSum(head);
+        // System.out.println(ret16);
+        
+        //test method 18: leaf similar
+        // TreeNode root1 = new TreeNode(3);
+        // root1.left = new TreeNode(5);
+        // root1.right = new TreeNode(1);
+        // root1.left.left = new TreeNode(6);
+        // root1.left.right = new TreeNode(2);  
+        // root1.left.right.left = new TreeNode(7);
+        // root1.left.right.right = new TreeNode(4);
+        // root1.right.left = new TreeNode(9);
+        // root1.right.right = new TreeNode(8);
+        
+        // TreeNode root2 = new TreeNode(3);
+        // root2.left = new TreeNode(5);
+        // root2.right = new TreeNode(1);
+        // root2.left.left = new TreeNode(6);
+        // root2.left.right = new TreeNode(7);
+        // root2.right.left = new TreeNode(4);
+        // root2.right.right = new TreeNode(2);
+        // root2.right.right.left = new TreeNode(9);
+        // root2.right.right.right = new TreeNode(8);
+
+        // boolean ret17 = test.leafSimilar(root1, root2);
+        // System.out.println(ret17);
+
+
+        //test method 19: count good nodes
+        // TreeNode root1 = new TreeNode(3);
+        // root1.left = new TreeNode(1);
+        // root1.right = new TreeNode(4);
+        // root1.left.left = new TreeNode(3);
+        // root1.right.left = new TreeNode(1);
+        // root1.right.right = new TreeNode(5);
+        
+        // System.out.println(test.goodNodes(root1));
+
+
+        //test method 20: path sum
+        TreeNode root1 = new TreeNode(10);
+        root1.left = new TreeNode(5);
+        root1.right = new TreeNode(-3);
+        root1.left.left = new TreeNode(3);
+        root1.left.right = new TreeNode(2);
+        root1.right.right = new TreeNode(11);
+        root1.left.left.left = new TreeNode(3);
+        root1.left.left.right = new TreeNode(-2);
+        root1.left.right.right = new TreeNode(1);
+        System.out.println(test.pathSum(root1, 8));
+
 
 
 
